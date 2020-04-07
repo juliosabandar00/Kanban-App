@@ -1,0 +1,17 @@
+.icon{
+    height:15px;
+}
+
+.avatar{
+    height:25px;
+    border-radius: 5px;
+}
+
+.card_container{
+    background-color: gray;
+    padding: 20px;
+}
+
+.card{
+    background-color: white;
+}
