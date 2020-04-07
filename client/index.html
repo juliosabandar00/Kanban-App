@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-signin-client_id" content="283978714162-pts6pavbd5co2lj4e08toggva21uvok7.apps.googleusercontent.com">
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <title>Document</title>
@@ -21,8 +22,10 @@
                     <label for="password_login">Password</label>
                     <input type="password" class="form-control" id="password_login">
                 </div>
-                <button type="submit" class="btn btn-primary">Log In</button>
-            </form>              
+                <button type="submit" class="btn btn-primary btn-lg btn-block">Log In</button>
+            </form>      
+            <div class="g-signin2" data-onsuccess="onSignIn"> Sign In With Google </div>
+            <a href data-onsuccess="onSignIn"> Don't have an account?</a>
         </div>
     </div>
     <!-- Register -->
@@ -39,12 +42,13 @@
                     <label for="password_register">Password</label>
                     <input type="password" class="form-control" id="password_register">
                 </div>
-                <button type="submit" class="btn btn-primary">Sign Up</button>
+                <button type="submit" class="btn btn-primary btn-lg btn-block">Sign Up</button>
             </form>              
         </div>
     </div>
     <!-- Kanban -->
     <div class ="page">
+        <a href="#" onclick="signOut();">Sign out</a>
         <div class="main_container">
             <div class="card_container" id="backlog_container">
                 <div class="card">
@@ -90,5 +94,7 @@
             <div class="card_container"></div>
         </div>
     </div>
+    <script src="main.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
 </body>
 </html>
