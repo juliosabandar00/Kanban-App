@@ -1,43 +1,40 @@
-const { Task } = require('../models');
+const { Task, User } = require('../models');
 class taskController {
     static showTasks (req, res, next){
-        Task.findAll({include: User, where: {organization : 'Hacktiv8'}})
+        Task.findAll({include: {
+            model: User, 
+            where: {organization : 'Hacktiv8'}
+        }})
         .then((tasks)=>{
             res.status(200).json({tasks})
         })
-        .catch(err=>{
-            next(err);
-        })
+        .catch(next);
     }
-    static addTask (req, res, nest){
+    static addTask (req, res, next){
         const {title, category} = req.body
         Task.create({title, category, UserId: req.UserId})
         .then((task)=>{
             res.status(200).json({task})
         })
-        .catch(err=>{
-            next(err);
-        });
+        .catch(next);
     }
     static editTask (req, res, next){
         const {title, category} = req.body;
         Task.update({title, category}, {where: {id:req.params.id}})
-        .then((task)=>{
-            res.status(200).json({task});
+        .then(()=>{
+            return Task.findByPk(req.params.id);
         })
-        .catch(err=>{
-            next(err);
-        });
+        .then(task =>{
+            res.status(200).json({task})
+        })
+        .catch(next);
     }
     static deleteTask (req, res, next){
         Task.destroy({where: {id:req.params.id}})
-        .then((task)=>{
+        .then(()=>{
             res.status(200).json({message: 'Task Successfully Deleted'});
         })
-        .catch(err=>{
-            next(err);
-        });
+        .catch(next);
     }
 }
-
 module.exports = taskController;

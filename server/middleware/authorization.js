@@ -1,12 +1,12 @@
-const { Todo } = require('../models');
+const { Task } = require('../models');
 function authorization (req, res, next){
-    Todo.findByPk(req.params.id)
-        .then( todo => {
-            if(!todo){
-                res.status(404).json({message: 'Todo not found'})
+    Task.findByPk(req.params.id)
+        .then( task => {
+            if(!task){
+                res.status(404).json({message: 'Task not found'})
             }else{
-                if(todo.UserId == req.userId){
-                    next()
+                if(task.UserId == req.UserId){
+                    next();
                 }else{
                     res.status(400).json({message: 'Access Forbidden'})
                 }
