@@ -4,9 +4,8 @@ function hashPassword(password, next) {
         let salt = bcrypt.genSaltSync(10);
         let hash = bcrypt.hashSync(password, salt);
         return hash;
-    } catch(err) {
-        // res.status(500).json({message: err.message})
-        next(err);
+    }catch(err){
+        next()
     }
 }
 module.exports = hashPassword;
