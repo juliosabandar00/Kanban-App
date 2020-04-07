@@ -10,13 +10,27 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true
       }
     },
+    organization: {
+      type: DataTypes.STRING,
+      validate : {
+        notEmpty: true
+      }
+    },
     password: {
       type: DataTypes.STRING,
       validate : {
         notEmpty: true
       }
     }
-  }, {sequelize})
+  }, 
+  {
+    sequelize,
+    hooks: {
+      beforeCreate: (task, option) => {
+        task.organization = 'Hacktiv8';
+      }
+    }
+  })
   User.associate = function(models) {
     User.hasMany(models.Task)
   };

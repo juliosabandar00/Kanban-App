@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-
 function authentication(req, res, next){
     const accessToken = req.headers.accesstoken;
     try{
@@ -9,8 +8,8 @@ function authentication(req, res, next){
             })
         }else{
             const decoded = jwt.verify(accessToken, process.env.JWT_SECRETKEY);
-            req.userId = decoded.userId;
-            req.email = decoded.email;
+            req.UserId = decoded.userId;
+            req.Email = decoded.email;
             next();
         }
     }catch(err){

@@ -6,7 +6,7 @@ const {OAuth2Client} = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 class UserController {
-    static register(req, res){
+    static register(req, res, next){
         User.create({
             email : req.body.email,
             password : req.body.password
@@ -18,7 +18,7 @@ class UserController {
             next(err)
         });
     }
-    static login(req, res){
+    static login(req, res, next){
         let input = req.body;
         User.findOne({where : {email : input.email}})
             .then( user => {
@@ -40,7 +40,7 @@ class UserController {
                 next(err);
             });
     }
-    static loginGoogle(req,res){
+    static loginGoogle(req,res,next){
         const token = req.body.token;
         const userData = {}
         client.verifyIdToken({

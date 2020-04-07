@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const Controller = require('../controllers/TodoController');
+const Controller = require('../controllers/taskController');
 const authentication = require('../middleware/authentication')
 const authorization = require('../middleware/authorization')
 const taskRouter = Router();

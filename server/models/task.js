@@ -22,7 +22,10 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true
       }
     },
-  }, {sequelize})
+  }, 
+  {
+    sequelize
+  });
   Task.associate = function(models) {
     Task.belongsTo(models.User)
   };

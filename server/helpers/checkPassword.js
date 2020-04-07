@@ -1,5 +1,4 @@
 const bcrypt = require('bcryptjs');
-
 function checkPassword(password, hash) {
     try{
         return bcrypt.compareSync(password, hash)
@@ -7,5 +6,4 @@ function checkPassword(password, hash) {
         console.log(err);
     }
 }
-
 module.exports = checkPassword;
