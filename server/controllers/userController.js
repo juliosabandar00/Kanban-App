@@ -9,7 +9,7 @@ class UserController {
     static register(req, res, next){
         User.create({
             email : req.body.email,
-            password : req.body.password
+            password : hashPassword(req.body.password)
         })
         .then( user => {
             res.status(201).json({user});
@@ -26,11 +26,11 @@ class UserController {
                     res.status(400).json({message : 'Invalid Email/Password'});
                 }else{
                     if(checkPassword(input.password, user.password)){
-                        const accessToken = jwt.sign({
+                        const access_token = jwt.sign({
                             userId : user.id,
                             email : user.email
                         }, process.env.JWT_SECRETKEY);
-                        res.status(201).json({accessToken});
+                        res.status(201).json({access_token});
                     }else{
                         res.status(400).json({message : 'Invalid Email/Password'});
                     }
@@ -65,11 +65,11 @@ class UserController {
           }
         })
         .then(theUser=>{
-          const accessToken = jwt.sign({
+          const access_token = jwt.sign({
             userId : theUser.id,
             email: theUser.email
           }, process.env.JWT_SECRETKEY)
-          res.status(200).json({accessToken})
+          res.status(200).json({access_token})
         })
         .catch(err=>{
           next(err);
