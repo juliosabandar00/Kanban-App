@@ -34,11 +34,23 @@ label{
     border-radius: 25px;
     transform: translateY(50%);
 }
-.card{
-    background-color: white;
-}
 .page{
     background-color: rgba(250, 113, 113, 0.603);
     height: 100vh;
     width: 100vw;
+}
+.main_container{
+    width: 97.5%;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+}
+.card_container{
+    width: 80%;
+    margin: 10px;
+    border-radius: 5px;
+}
+.card{
+    background-color: white;
+    margin: 10px;
 }

@@ -20,5 +20,4 @@ function onSignIn(googleUser) {
             }
         }
     })
-}
-  
+}  
