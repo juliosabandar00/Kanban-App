@@ -11,8 +11,16 @@ class taskController {
         .catch(next);
     }
     static addTask (req, res, next){
-        const {title, category} = req.body
-        Task.create({title, category, UserId: req.UserId})
+        // console.log(req.body)
+        // const {title, category} = req.body
+        let title = req.body.title;
+        let category = req.body.category;
+
+        console.log(title);
+        console.log(category);
+
+        Task.create({title, category, UserId: req.UserId}, 
+            { include: { model: User }})
         .then((task)=>{
             res.status(200).json({task})
         })

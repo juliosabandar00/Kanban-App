@@ -16,6 +16,7 @@ class UserController {
         .catch(next);
     }
     static login(req, res, next){
+        console.log(req.body)
         let input = req.body;
         User.findOne({where : {email : input.email}})
 		.then( user => {

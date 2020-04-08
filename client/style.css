@@ -2,24 +2,40 @@
     background-color: rgba(36, 45, 172, 0.603);
 }
 
-h1, h2 {
+h1, h2, h6 {
     color: white;
 }
+
+a {
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 16px;
+  }
+  
+  a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+  
+  .previous {
+    background-color: #f1f1f1;
+    color: black;
+  }
+  
+  .next {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .round {
+    border-radius: 50%;
+  }
+  
 
 label{
     color: white;
 }
 
-/* .g-signin2{
-    margin-top: 10px;
-} */
-
-a:link {
-    color: white;
-    background-color: transparent;
-    text-decoration: none;
-  }
-  
 .icon{
     height:15px;
 }
@@ -35,7 +51,7 @@ a:link {
     padding: 50px;
     margin: 0 auto;
     border-radius: 25px;
-    transform: translateY(50%);
+    transform: translateY(25%);
 }
 
 .card{
@@ -52,7 +68,7 @@ a:link {
 }
 .main_container{
     width: 97.5%;
-    height: 800px;
+    height: 90vh;
     display: flex;
     justify-content: center;
     margin: 0 auto;

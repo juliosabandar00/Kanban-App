@@ -6,228 +6,120 @@
     <meta name="google-signin-client_id" content="283978714162-pts6pavbd5co2lj4e08toggva21uvok7.apps.googleusercontent.com">
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <title>Document</title>
+    <!-- <title>Document</title> -->
 </head>
 <body>
     <!-- Login -->
     <div id="app">
-        <div class ="page" v-show="logIn">
+        <div class ="page" v-if="logIn">
             <div class ="login_container">
                 <h2>Log In to Your Account</h2>
-                <form>
+                <form v-on:submit.prevent="login()">
                     <div class="form-group">
                         <label for="email_login">Email address</label>
-                        <input type="email" class="form-control" id="email_login" aria-describedby="emailHelp">
+                        <input v-model="emailLog" type="email" class="form-control" id="email_login" aria-describedby="emailHelp">
                     </div>
                     <div class="form-group">
                         <label for="password_login">Password</label>
-                        <input type="password" class="form-control" id="password_login">
+                        <input v-model="passwordLog" type="password" class="form-control" id="password_login">
                     </div>
                     <button type="submit" class="btn btn-primary btn-lg btn-block">Log In</button>
                 </form>      
-                <div class="g-signin2" data-onsuccess="onSignIn"> Sign In With Google </div>
-                <a href="google.com"> Don't have an account?</a>
+                <br>
+                <button v-on:click.stop="showRegisterForm()" type="button" class="btn btn-success btn-lg btn-block">Create A New Account</button>
+                <center>
+                    <br>
+                    <h6>---- Or ----</h6>
+                    <h6>Log In With Google</h6>
+                    <div class="g-signin2" data-onsuccess="onSignIn"> Sign In With Google </div>
+                </center>
             </div>
         </div>
-
-
-
         <!-- Register -->
-        <div class ="page" v-show="signUp">
+        <div class ="page" v-if="signUp">
             <div class ="register_container">
+                <a v-on:click.prevent="showLoginForm()" class="previous round">&#8249;</a>
+                <br>
+                <br>
                 <h2>Create a New Account</h2>
-                <form>
+                <form v-on:submit.prevent="register()">
                     <div class="form-group">
                         <label for="email_register">Email address</label>
-                        <input type="email" class="form-control" id="email_register" aria-describedby="emailHelp">
+                        <input v-model="emailReg" type="email" class="form-control" id="email_register" aria-describedby="emailHelp">
                     </div>
                     <div class="form-group">
                         <label for="password_register">Password</label>
-                        <input type="password" class="form-control" id="password_register">
+                        <input v-model="passwordReg" type="password" class="form-control" id="password_register">
                     </div>
                     <button type="submit" class="btn btn-primary btn-lg btn-block">Sign Up</button>
                 </form>              
             </div>
         </div>
-
-
-
         <!-- Kanban -->
-        <div class ="page" v-show="kanban">
-            <div>
-                <div class ="header">
-                    <button type="button" onclick="signOut();" class="btn btn-danger">Sign Out</button>
+        <div class ="page" v-if="kanban">
+            <div class ="header">
+                <button type="button" v-on:click.stop="signOut()" class="btn btn-danger">Sign Out</button>
+            </div>
+
+            <div class="main_container"  >
+                <!-- catagories -->
+                <div v-for="(category, index) in categories" class="card_container" id="backlog_container" >
+                    <div class="top_part" >
+                        <div class="category_div">
+                            <h1>{{category}}</h1>
+                        </div>
+                        <div class="scroller"> 
+                            <div data-spy="scroll" data-target="#navbar-example3" data-offset="0">
+                                <div v-for="task in tasks" :key="task.id" v-if="task.category === category" class="card">
+
+                                    <div v-if="updateId !== task.id">
+                                        <div class="content">
+                                            <h4> {{task.title}} </h4>
+                                            <p> {{task.User.email}} </p>
+                                        </div>
+                                        <div class="actions">
+                                            <div class="user_container">
+                                                <button v-on:click.prevent="updateTask(task.id, task.title, task.category)" type="button" class="btn btn-primary btn-sm">Edit</button>
+                                                <button v-on:click.prevent="deleteTask(task.id)" type="button" class="btn btn-danger btn-sm">Delete</button>
+                                            </div>
+                                        </div>    
+                                    </div>
+
+                                    <div v-if="updateId == task.id">
+                                        <form v-on:submit.prevent="saveUpdate(task.id)">
+                                            <div class="form-group">
+                                                <input v-model="updateTitle" value="updateTitle" type="text" class="form-control form-control-sm">
+                                            </div>
+                                            <select value="updateCategory" v-model="updateCategory" class="form-control form-control-sm">
+                                                <option v-for="category2 in categories" v-if="category2 === category" selected>{{category2}}</option>
+                                                <option v-for="category2 in categories" v-if="category2 !== category" >{{category2}}</option>
+                                            </select>  
+                                            <button type="submit" class="btn btn-primary btn-sm">Save Changes</button>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="add_task_div">
+                        <form @submit.prevent="createTask(index)">
+                            <textarea v-if="index==0" v-model="inputTitle0" class="form-control" rows="2"></textarea>
+                            <textarea v-if="index==1" v-model="inputTitle1" class="form-control" rows="2"></textarea>
+                            <textarea v-if="index==2" v-model="inputTitle2" class="form-control" rows="2"></textarea>
+                            <textarea v-if="index==3" v-model="inputTitle3" class="form-control" rows="2"></textarea>
+                            <br>
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Add Task</button>
+                        </form>                            
+                    </div>
                 </div>
-
-                <div class="main_container"  >
-
-                    <!-- backlogs -->
-                    <div class="card_container" id="backlog_container" >
-
-                        <div class="top_part" >
-
-                            <div class="category">
-                                <h1>Backlog</h1>
-                            </div>
-
-                            <div class="scroller"> 
-                                <div data-spy="scroll" data-target="#navbar-example3" data-offset="0">
-                                    <div v-for="task in tasks" v-if="task.category === 'Backlog'" class="card">
-                                        <div class="content">
-                                            <h5> {{task.title}} </h5>
-                                            <p> {{task.User.email}} </p>
-                                        </div>
-                                        <div class="actions">
-                                            <div class="user_container">
-                                                <button type="button" class="btn btn-primary btn-sm">Edit</button>
-                                                <button type="button" class="btn btn-danger btn-sm">Delete</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-        
-                            </div>
-                        </div>
-                        <br>
-                        <div class="add_task_div">
-                            <form>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
-                                <br>
-                                <button type="submit" class="btn btn-primary btn-lg btn-block">Add Task</button>
-                            </form>                            
-                        </div>
-                    </div>
-
-                    <!-- todos -->
-                    <div class="card_container" id="todo_container" >
-
-                        <div class="top_part">
-
-                            <div class="category">
-                                <h1>Todos</h1>
-                            </div>
-
-                            <div class="scroller"> 
-                                <div data-spy="scroll" data-offset="0">
-                                    <div v-for="task in tasks" v-if="task.category === 'Todo'" class="card">
-                                        <div class="content">
-                                            <h5> {{task.title}} </h5>
-                                            <p> {{task.User.email}} </p>
-                                        </div>
-                                        <div class="actions">
-                                            <div class="user_container">
-                                                <button type="button" class="btn btn-primary btn-sm">Edit</button>
-                                                <button type="button" class="btn btn-danger btn-sm">Delete</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-        
-                            </div>
-                        </div>
-                        <br>
-                        <div class="add_task_div">
-                            <form>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
-                                <br>
-                                <button type="submit" class="btn btn-primary btn-lg btn-block">Add Task</button>
-                            </form>                            
-                        </div>
-                    </div>
-
-                    <!-- In Progress -->
-                    <div class="card_container" id="in_progress_container" >
-
-                        <div class="top_part">
-
-                            <div class="category">
-                                <h1>In Progress</h1>
-                            </div>
-
-                            <div class="scroller"> 
-                                <div data-spy="scroll" data-offset="0">
-                                    <div v-for="task in tasks" v-if="task.category === 'In Progress'" class="card">
-                                        <div class="content">
-                                            <h5> {{task.title}} </h5>
-                                            <p> {{task.User.email}} </p>
-                                        </div>
-                                        <div class="actions">
-                                            <div class="user_container">
-                                                <button type="button" class="btn btn-primary btn-sm">Edit</button>
-                                                <button type="button" class="btn btn-danger btn-sm">Delete</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-        
-                            </div>
-                        </div>
-                        <br>
-                        <div class="add_task_div">
-                            <form>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
-                                <br>
-                                <button type="submit" class="btn btn-primary btn-lg btn-block">Add Task</button>
-                            </form>                            
-                        </div>
-                    </div>
-
-                    <!-- Completed -->
-                    <div class="card_container" id="todo_container" >
-
-                        <div class="top_part">
-
-                            <div class="category">
-                                <h1>Completed</h1>
-                            </div>
-
-                            <div class="scroller"> 
-                                <div data-spy="scroll" data-offset="0">
-                                    <div v-for="task in tasks" v-if="task.category === 'Completed'" class="card">
-                                        <div class="content">
-                                            <h5> {{task.title}} </h5>
-                                            <p> {{task.User.email}} </p>
-                                        </div>
-                                        <div class="actions">
-                                            <div class="user_container">
-                                                <button type="button" class="btn btn-primary btn-sm">Edit</button>
-                                                <button type="button" class="btn btn-danger btn-sm">Delete</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-        
-                            </div>
-                        </div>
-                        <br>
-                        <div class="add_task_div">
-                            <form>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
-                                <br>
-                                <button type="submit" class="btn btn-primary btn-lg btn-block">Add Task</button>
-                            </form>                            
-                        </div>
-                    </div>
-
-
-                    
-
-                    
-
-
-                </div>
-
-
-
             </div>
         </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script src="main.js"></script>
-
 </body>
 </html>
