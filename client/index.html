@@ -10,297 +10,224 @@
 </head>
 <body>
     <!-- Login -->
-    <div class ="page">
-        <div class ="login_container">
-            <h2>Log In to Your Account</h2>
-            <form>
-                <div class="form-group">
-                    <label for="email_login">Email address</label>
-                    <input type="email" class="form-control" id="email_login" aria-describedby="emailHelp">
+    <div id="app">
+        <div class ="page" v-show="logIn">
+            <div class ="login_container">
+                <h2>Log In to Your Account</h2>
+                <form>
+                    <div class="form-group">
+                        <label for="email_login">Email address</label>
+                        <input type="email" class="form-control" id="email_login" aria-describedby="emailHelp">
+                    </div>
+                    <div class="form-group">
+                        <label for="password_login">Password</label>
+                        <input type="password" class="form-control" id="password_login">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Log In</button>
+                </form>      
+                <div class="g-signin2" data-onsuccess="onSignIn"> Sign In With Google </div>
+                <a href="google.com"> Don't have an account?</a>
+            </div>
+        </div>
+
+
+
+        <!-- Register -->
+        <div class ="page" v-show="signUp">
+            <div class ="register_container">
+                <h2>Create a New Account</h2>
+                <form>
+                    <div class="form-group">
+                        <label for="email_register">Email address</label>
+                        <input type="email" class="form-control" id="email_register" aria-describedby="emailHelp">
+                    </div>
+                    <div class="form-group">
+                        <label for="password_register">Password</label>
+                        <input type="password" class="form-control" id="password_register">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Sign Up</button>
+                </form>              
+            </div>
+        </div>
+
+
+
+        <!-- Kanban -->
+        <div class ="page" v-show="kanban">
+            <div>
+                <div class ="header">
+                    <button type="button" onclick="signOut();" class="btn btn-danger">Sign Out</button>
                 </div>
-                <div class="form-group">
-                    <label for="password_login">Password</label>
-                    <input type="password" class="form-control" id="password_login">
+
+                <div class="main_container"  >
+
+                    <!-- backlogs -->
+                    <div class="card_container" id="backlog_container" >
+
+                        <div class="top_part" >
+
+                            <div class="category">
+                                <h1>Backlog</h1>
+                            </div>
+
+                            <div class="scroller"> 
+                                <div data-spy="scroll" data-target="#navbar-example3" data-offset="0">
+                                    <div v-for="task in tasks" v-if="task.category === 'Backlog'" class="card">
+                                        <div class="content">
+                                            <h5> {{task.title}} </h5>
+                                            <p> {{task.User.email}} </p>
+                                        </div>
+                                        <div class="actions">
+                                            <div class="user_container">
+                                                <button type="button" class="btn btn-primary btn-sm">Edit</button>
+                                                <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                            </div>
+                        </div>
+                        <br>
+                        <div class="add_task_div">
+                            <form>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
+                                <br>
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">Add Task</button>
+                            </form>                            
+                        </div>
+                    </div>
+
+                    <!-- todos -->
+                    <div class="card_container" id="todo_container" >
+
+                        <div class="top_part">
+
+                            <div class="category">
+                                <h1>Todos</h1>
+                            </div>
+
+                            <div class="scroller"> 
+                                <div data-spy="scroll" data-offset="0">
+                                    <div v-for="task in tasks" v-if="task.category === 'Todo'" class="card">
+                                        <div class="content">
+                                            <h5> {{task.title}} </h5>
+                                            <p> {{task.User.email}} </p>
+                                        </div>
+                                        <div class="actions">
+                                            <div class="user_container">
+                                                <button type="button" class="btn btn-primary btn-sm">Edit</button>
+                                                <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                            </div>
+                        </div>
+                        <br>
+                        <div class="add_task_div">
+                            <form>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
+                                <br>
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">Add Task</button>
+                            </form>                            
+                        </div>
+                    </div>
+
+                    <!-- In Progress -->
+                    <div class="card_container" id="in_progress_container" >
+
+                        <div class="top_part">
+
+                            <div class="category">
+                                <h1>In Progress</h1>
+                            </div>
+
+                            <div class="scroller"> 
+                                <div data-spy="scroll" data-offset="0">
+                                    <div v-for="task in tasks" v-if="task.category === 'In Progress'" class="card">
+                                        <div class="content">
+                                            <h5> {{task.title}} </h5>
+                                            <p> {{task.User.email}} </p>
+                                        </div>
+                                        <div class="actions">
+                                            <div class="user_container">
+                                                <button type="button" class="btn btn-primary btn-sm">Edit</button>
+                                                <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                            </div>
+                        </div>
+                        <br>
+                        <div class="add_task_div">
+                            <form>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
+                                <br>
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">Add Task</button>
+                            </form>                            
+                        </div>
+                    </div>
+
+                    <!-- Completed -->
+                    <div class="card_container" id="todo_container" >
+
+                        <div class="top_part">
+
+                            <div class="category">
+                                <h1>Completed</h1>
+                            </div>
+
+                            <div class="scroller"> 
+                                <div data-spy="scroll" data-offset="0">
+                                    <div v-for="task in tasks" v-if="task.category === 'Completed'" class="card">
+                                        <div class="content">
+                                            <h5> {{task.title}} </h5>
+                                            <p> {{task.User.email}} </p>
+                                        </div>
+                                        <div class="actions">
+                                            <div class="user_container">
+                                                <button type="button" class="btn btn-primary btn-sm">Edit</button>
+                                                <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                            </div>
+                        </div>
+                        <br>
+                        <div class="add_task_div">
+                            <form>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
+                                <br>
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">Add Task</button>
+                            </form>                            
+                        </div>
+                    </div>
+
+
+                    
+
+                    
+
+
                 </div>
-                <button type="submit" class="btn btn-primary btn-lg btn-block">Log In</button>
-            </form>      
-            <div class="g-signin2" data-onsuccess="onSignIn"> Sign In With Google </div>
-            <a href data-onsuccess="onSignIn"> Don't have an account?</a>
+
+
+
+            </div>
         </div>
     </div>
-    <!-- Register -->
-    <div class ="page">
-        <div class ="register_container">
-            <h2>Create a New Account</h2>
 
-            <form>
-                <div class="form-group">
-                    <label for="email_register">Email address</label>
-                    <input type="email" class="form-control" id="email_register" aria-describedby="emailHelp">
-                </div>
-                <div class="form-group">
-                    <label for="password_register">Password</label>
-                    <input type="password" class="form-control" id="password_register">
-                </div>
-                <button type="submit" class="btn btn-primary btn-lg btn-block">Sign Up</button>
-            </form>              
-        </div>
-    </div>
-    <!-- Kanban -->
-    <div class ="page">
-        <a href="#" onclick="signOut();">Sign out</a>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>
 
-
-        <div class="main_container">
-
-            <div class="card_container" id="backlog_container">
-                <h1>Backlog</h1>
-
-                <div class="card">
-                    <div class="text"> ha</div>
-                    <div class="menu">
-                        <div class="tags_container">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                        </div>
-                        <div class="user_container">
-                            <img class="avatar" src="assets/pp1.jpg"> 
-                            <img class="avatar" src="assets/pp2.jpg"> 
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="text"> ha</div>
-                    <div class="menu">
-                        <div class="tags_container">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                        </div>
-                        <div class="user_container">
-                            <img class="avatar" src="assets/pp1.jpg"> 
-                            <img class="avatar" src="assets/pp2.jpg"> 
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="text"> ha</div>
-                    <div class="menu">
-                        <div class="tags_container">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                        </div>
-                        <div class="user_container">
-                            <img class="avatar" src="assets/pp1.jpg"> 
-                            <img class="avatar" src="assets/pp2.jpg"> 
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card_container" id="todo_container">
-                <h1>Todo</h1>
-                <div class="card">
-                    <div class="text"> ha</div>
-                    <div class="menu">
-                        <div class="tags_container">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                        </div>
-                        <div class="user_container">
-                            <img class="avatar" src="assets/pp1.jpg"> 
-                            <img class="avatar" src="assets/pp2.jpg"> 
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="text"> ha</div>
-                    <div class="menu">
-                        <div class="tags_container">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                        </div>
-                        <div class="user_container">
-                            <img class="avatar" src="assets/pp1.jpg"> 
-                            <img class="avatar" src="assets/pp2.jpg"> 
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="text"> ha</div>
-                    <div class="menu">
-                        <div class="tags_container">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                        </div>
-                        <div class="user_container">
-                            <img class="avatar" src="assets/pp1.jpg"> 
-                            <img class="avatar" src="assets/pp2.jpg"> 
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
-            <div class="card_container" id="in_progress_container">
-                <h1>In Progress</h1>
-                <div class="card">
-                    <div class="text"> ha</div>
-                    <div class="menu">
-                        <div class="tags_container">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                        </div>
-                        <div class="user_container">
-                            <img class="avatar" src="assets/pp1.jpg"> 
-                            <img class="avatar" src="assets/pp2.jpg"> 
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="text"> ha</div>
-                    <div class="menu">
-                        <div class="tags_container">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                        </div>
-                        <div class="user_container">
-                            <img class="avatar" src="assets/pp1.jpg"> 
-                            <img class="avatar" src="assets/pp2.jpg"> 
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="text"> ha</div>
-                    <div class="menu">
-                        <div class="tags_container">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                        </div>
-                        <div class="user_container">
-                            <img class="avatar" src="assets/pp1.jpg"> 
-                            <img class="avatar" src="assets/pp2.jpg"> 
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card_container" id="completed_container">
-                <h1>Completed</h1>
-                <div class="card">
-                    <div class="text"> Make REST API</div>
-                    <div class="menu">
-                        <div class="tags_container">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                        </div>
-                        <div class="user_container">
-                            <img class="avatar" src="assets/pp1.jpg"> 
-                            <img class="avatar" src="assets/pp2.jpg"> 
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="text"> Make REST API</div>
-                    <div class="menu">
-                        <div class="tags_container">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                        </div>
-                        <div class="user_container">
-                            <img class="avatar" src="assets/pp1.jpg"> 
-                            <img class="avatar" src="assets/pp2.jpg"> 
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="text"> Make REST API</div>
-                    <div class="menu">
-                        <div class="tags_container">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                        </div>
-                        <div class="user_container">
-                            <img class="avatar" src="assets/pp1.jpg"> 
-                            <img class="avatar" src="assets/pp2.jpg"> 
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="card">
-                    <div class="text"> Make REST API</div>
-                    <div class="menu">
-                        <div class="tags_container">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                        </div>
-                        <div class="user_container">
-                            <img class="avatar" src="assets/pp1.jpg"> 
-                            <img class="avatar" src="assets/pp2.jpg"> 
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="card">
-                    <div class="text"> Create Models</div>
-                    <div class="menu">
-                        <div class="tags_container">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                        </div>
-                        <div class="user_container">
-                            <img class="avatar" src="assets/pp1.jpg"> 
-                            <img class="avatar" src="assets/pp2.jpg"> 
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="text"> Login Features</div>
-                    <div class="menu">
-                        <div class="tags_container">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                            <img class="icon" src="assets/thumbs.png">
-                        </div>
-                        <div class="user_container">
-                            <img class="avatar" src="assets/pp1.jpg"> 
-                            <img class="avatar" src="assets/pp2.jpg"> 
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
-
-        </div>
-    </div>
-    <script src="main.js"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="main.js"></script>
+
 </body>
 </html>

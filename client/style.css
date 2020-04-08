@@ -1,7 +1,8 @@
 .body{
     background-color: rgba(36, 45, 172, 0.603);
 }
-h2 {
+
+h1, h2 {
     color: white;
 }
 
@@ -13,19 +14,21 @@ label{
     margin-top: 10px;
 } */
 
+a:link {
+    color: white;
+    background-color: transparent;
+    text-decoration: none;
+  }
+  
 .icon{
     height:15px;
 }
 
 .avatar{
     height:25px;
-    border-radius: 5px;
+    border-radius: 25px;
 }
 
-.card_container{
-    background-color: rgba(0, 113, 113, 0.603);
-    padding: 20px;
-}
 .login_container, .register_container{
     background-color: rgba(0, 113, 113, 0.603);
     width: 35%;
@@ -34,6 +37,14 @@ label{
     border-radius: 25px;
     transform: translateY(50%);
 }
+
+.card{
+    border-radius: 25px;
+    background-color: white(161, 39, 39);
+    margin: 10px;
+    padding: 10px;
+}
+
 .page{
     background-color: rgba(250, 113, 113, 0.603);
     height: 100vh;
@@ -41,16 +52,38 @@ label{
 }
 .main_container{
     width: 97.5%;
+    height: 800px;
     display: flex;
     justify-content: center;
     margin: 0 auto;
 }
 .card_container{
-    width: 80%;
+    background-color: rgba(0, 113, 113, 0.603);
+    padding: 20px;
+    width: 25%;
     margin: 10px;
-    border-radius: 5px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* align-content: space-between; */
 }
-.card{
-    background-color: white;
-    margin: 10px;
+.header{
+    padding: 0.5%;
+}
+
+.top_part{
+    position: relative;
+    height: 80%;
+    overflow-y: scroll;
+}
+
+.user_container{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.add_task_div{
+    margin: 0 auto;
+    width: 95%;
 }
