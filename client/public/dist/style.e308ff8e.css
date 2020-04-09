@@ -116,4 +116,19 @@ label{
     width: 95%;
 }
 
+.navbar {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "title  signout" 
+}
+
+
+.navbar .title {
+    grid-area: title ;
+}
+.navbar .signout{
+    grid-area: signout;
+}
+
 /*# sourceMappingURL=/style.e308ff8e.css.map */

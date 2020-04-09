@@ -1,7 +1,14 @@
 <template>
     <div>
         <div class ="page" v-if="logIn">
+            <nav class="navbar navbar-dark bg-primary">
+                <div class="title" >
+                    <h2 class="app_name"> KANBAN </h2>
+                </div>
+            </nav>
+
             <div class ="login_container">
+
                 <h2>Log In to Your Account</h2>
                 <form v-on:submit.prevent="login">
                     <div class="form-group">
@@ -20,13 +27,18 @@
                     <br>
                     <h6>------- Or -------</h6>
                     <h6>Log In With Google</h6>
-                    <div id="google-signin-button"></div>
-                    <!-- <div class="g-signin2" data-onsuccess="onSignIn"> Sign In With Google </div> -->
+                    <GoogleButton @loginWithGoogle="onSignIn">
+                    </GoogleButton>
                 </center>
             </div>
         </div>
         <!-- Register -->
         <div class ="page" v-if="signUp">
+                <nav class="navbar navbar-dark bg-primary">
+                    <div class="title" >
+                        <h2 class="app_name"> KANBAN </h2>
+                    </div>
+                </nav>
                 <div class ="register_container">
                     <a v-on:click.prevent="showLoginForm" class="previous round">&#8249;</a>
                     <br>
@@ -47,72 +59,43 @@
         </div>
         <!-- Kanban -->
         <div class ="page" v-if="kanban">
-            <div class ="header">
-                <button type="button" v-on:click.stop="signOut" class="btn btn-danger">Sign Out</button>
-            </div>
+            <nav class="navbar navbar-dark bg-primary">
 
+                <div class="title" >
+                    <h2 class="app_name"> KANBAN </h2>
+                </div>
+                <div class="signout">
+                    <button type="button" v-on:click.stop="signOut" class="btn btn-danger">Sign Out</button>
+                </div>
+            </nav>
             <div class="main_container"  >
                 <!-- catagories -->
-                <div v-for="(category, index) in categories" class="card_container" id="backlog_container" >
-                    <div class="category_div">
-                        <h1>{{category}}</h1>
-                    </div>
-                    <div class="top_part" >
-                        <div class="scroller"> 
-                            <div data-spy="scroll" data-target="#navbar-example3" data-offset="0">
-                                <transition-group name="fade">
-                                    <div v-for="task in tasks" :key="task.id" v-if="task.category === category" class="card">
-                                        <div v-if="updateId !== task.id">
-                                            <div class="content">
-                                                <h4> {{task.title}} </h4>
-                                                <p> {{task.User.email}} </p>
-                                            </div>
-                                            <div class="actions">
-                                                <div class="user_container">
-                                                    <button v-on:click.prevent="updateTask(task.id, task.title, task.category)" type="button" class="btn btn-primary btn-sm action_button">Edit</button>
-                                                    <button v-on:click.prevent="deleteTask(task.id)" type="button" class="btn btn-danger btn-sm action_button">Delete</button>
-                                                </div>
-                                            </div>    
-                                        </div>
-                                        <div v-if="updateId == task.id">
-                                            <form v-on:submit.prevent="saveUpdate(task.id)">
-                                                <div class="form-group">
-                                                    <input v-model="updateTitle" value="updateTitle" type="text" class="form-control form-control-sm">
-                                                </div>
-                                                <select value="updateCategory" v-model="updateCategory" class="form-control form-control-sm">
-                                                    <option v-for="category2 in categories" v-if="category2 === category" selected>{{category2}}</option>
-                                                    <option v-for="category2 in categories" v-if="category2 !== category" >{{category2}}</option>
-                                                </select>  
-                                                <br>
-                                                <button type="submit" class="btn btn-primary btn-sm">Save Changes</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </transition-group>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="add_task_div">
-                        <form @submit.prevent="createTask(index)">
-                            <textarea v-if="index==0" v-model="inputTitle0" class="form-control" rows="2" placeholder="enter new task here"></textarea>
-                            <textarea v-if="index==1" v-model="inputTitle1" class="form-control" rows="2" placeholder="enter new task here"></textarea>
-                            <textarea v-if="index==2" v-model="inputTitle2" class="form-control" rows="2" placeholder="enter new task here"></textarea>
-                            <textarea v-if="index==3" v-model="inputTitle3" class="form-control" rows="2" placeholder="enter new task here"></textarea>
-                            <br>
-                            <button type="submit" class="btn btn-primary btn-lg btn-block">Add Task</button>
-                        </form>                            
-                    </div>
-                </div>
+                <TaskList v-for="category in categories" 
+                :key="category.id"
+                :catId = "category.id"
+                :category="category.name"
+                :categories="categories"
+                :tasks="tasks"
+                @createTaskFromChild="createTask"
+                @deleteTaskFromChild="deleteTask"
+                @updateTaskFromChild="updateTask"
+                class="card_container" id="backlog_container" >
+                </TaskList>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import TaskList from './components/TaskList.vue';
+    import GoogleButton from './components/GoogleButton.vue';
     const url = 'http://localhost:5000';
-    export default{
+    export default {
         name:'App',
+        components: {
+            TaskList,
+            GoogleButton
+        },
         data(){
             return{
                 loggedIn: false,
@@ -121,17 +104,24 @@
                 //account data
                 emailLog: null, passwordLog: null,
                 emailReg: null, passwordReg: null,
+                userEmail: null,
                 //kanban data  
-                tasks : null,
-                categories: ['Backlog', 'Todo', 'In Progress', 'Completed'],
+                tasks : [],
+                categories: [
+                    {id: 0,
+                    name: 'Backlog'},
+                    {id: 1,
+                    name: 'Todo'},
+                    {id: 2,
+                    name: 'In Progress'},
+                    {id: 3,
+                    name: 'Completed'}
+                ],
                 inputTitle0: null, inputTitle1: null, inputTitle2: null, inputTitle3: null,
                 updateId: null,
                 updateTitle: null,
                 updateCategory: null
             }
-        },
-        mounted(){
-            this.renderGoogleButton()
         },
         created(){
             this.checkLogin();
@@ -142,7 +132,7 @@
                     this.loggedIn = true;
                 }
                 if(this.loggedIn == true){
-                    this.loadTasks()
+                    this.loadTasks();
                     this.kanban = true;
                     this.logIn = false;
                     this.signUp = false;
@@ -155,11 +145,6 @@
             showLoginForm: function(){
                 this.logIn = true;
                 this.signUp = false;
-            },
-            renderGoogleButton: function() {
-                gapi.signin2.render('google-signin-button', {
-                    'data-onsuccess': this.onSignIn
-                });
             },
             login: function(){
                 console.log(this.emailLog);
@@ -180,6 +165,7 @@
                 })
                 .then(()=>{
                     console.log(localStorage.getItem('access_token'));
+                    this.userEmail = this.emailLog;
                     this.emailLog = null;
                     this.passwordLog = null;
                     this.checkLogin();
@@ -193,30 +179,11 @@
                     });         
                 });
             },
-            onSignIn: function(googleUser){
-                console.log('test')
-                var id_token = googleUser.getAuthResponse().id_token;
-                axios({
-                    method : 'POST',
-                    url: 'http://localhost:5000/loginGoogle',
-                    data : {
-                    token: id_token
-                    }
-                })
-                .then( response =>{
-                    console.log(response)
-                    localStorage.setItem('access_token', response.data.access_token);
-                    console.log(this.loggedIn);
-                    this.loggedIn = true;
-                    this.checkLogin();
-                })
-                .catch(err =>{
-                    swal({
-                        title: "Error",
-                        text: 'Invalid Username/Password', 
-                        icon: "error"
-                    });
-                });
+            onSignIn: function(payload){
+                console.log(payload)
+                this.loggedIn = true;
+                this.checkLogin();
+                this.$emit('updateTaskFromChild', response.data);
             },
             showRegisterForm: function(){
                 this.logIn = false;
@@ -255,12 +222,13 @@
                 })
                 .then(signout=>{
                     if(signout){
+                        this.gSignOut()
+                        this.userEmail = null;
                         localStorage.clear();
                         this.loggedIn = false;
-                        this.checkLogin();                    
+                        this.checkLogin();  
                     }
                 });
-                // this.gSignOut()
             },
             loadTasks: function(){
                 console.log(localStorage.getItem('access_token'));
@@ -281,153 +249,26 @@
                         icon: "error"
                     });
                 })
-            },
-            createTask: function(CatId){
-                let title, category; 
-                switch(CatId) {
-                    case 0:
-                        title = this.inputTitle0;
-                        category = this.categories[0];
-                        break;
-                    case 1:
-                        title = this.inputTitle1;
-                        category = this.categories[1];
-                        break;
-                    case 2:
-                        title = this.inputTitle2;
-                        category = this.categories[2];
-                        break;
-                    case 3:
-                        title = this.inputTitle3;
-                        category = this.categories[3];
-                        break;
-                    default:
-                        break;
-                }
-                axios({
-                    url: url + '/task',
-                    method: 'post',
-                    data: {
-                        title: title,
-                        category: category
-                    },
-                    headers:{
-                        access_token : localStorage.getItem('access_token'),
-                    }
-                })
-                .then(response=>{
-                    console.log(response.data.task)
-                    this.loadTasks();
-                    switch(CatId) {
-                        case 0:
-                            this.inputTitle0 = null;
-                            break;
-                        case 1:
-                            this.inputTitle1 = null;
-                            break;
-                        case 2:
-                            this.inputTitle2 = null;
-                            break;
-                        case 3:
-                            this.inputTitle3 = null;
-                            break;
-                        default:
-                            break;
-                    }
-                })
-                .catch(err=>{
-                    swal({
-                        title: "Error",
-                        text: 'Task Title Cannot Be Empty', 
-                        icon: "error"
-                    })            
-                });
-            },
-            deleteTask: function(id){
-                swal({
-                    title: "Are you sure you want to delete this task?",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true
-                })
-                .then(willDelete=>{
-                    if(willDelete){
-                        axios({
-                            url: url + '/task/' + id,
-                            method: 'delete',
-                            headers:{
-                                access_token : localStorage.getItem('access_token')
-                            }
-                        })
-                        .then(response=>{
-                            console.log(response)
-                            swal("Task has been deleted!", {
-                                icon: "success",
-                            });
-                            this.loadTasks();
-                        })
-                        .catch(()=>{
-                            swal({
-                                title: "Error",
-                                text: "You do not have access to delete this task!", 
-                                icon: "error",
-                            });   
-                        });
-                    }
-                });
-            },
-            updateTask: function(id, title, category){
-                this.updateId = id;
-                this.updateTitle = title;
-                this.updateCategory = category;
+            },           
+            createTask: function(payload){
+                console.log(payload);
                 this.loadTasks();
-                console.log(this.updateId)
-                console.log(this.updateTitle)
             },
-            saveUpdate: function(id){
-                axios({
-                    url: url + '/task/' + id,
-                    method: 'put',
-                    headers:{
-                        access_token : localStorage.getItem('access_token'),
-                    },
-                    data:{
-                        title : this.updateTitle,
-                        category : this.updateCategory
-                    }
-                })
-                .then(response=>{
-                    console.log(response)
-                    this.updateId = null;
-                    this.updateTitle = null;    
-                    this.updateCategory = null;
-                    this.loadTasks();
-                })
-                .catch(err=>{
-                    console.log(err.request.status)
-                    if(err.request.status == 401){
-                        swal({
-                            title: "Error",
-                            text: "Title of Task Cannot Be Empty!", 
-                            icon: "error",
-                        })             
-                    }else{
-                        swal({
-                            title: "Error",
-                            text: "You do not have access to edit this task!", 
-                            icon: "error",
-                        })                
-                    }
-                    this.updateId = null;
-                    this.updateTitle = null;    
-                    console.log(err);
-                });
+            updateTask: function(payload){
+                console.log(payload);
+                this.loadTasks();
+            },
+            deleteTask: function(payload){
+                console.log(payload);
+                this.loadTasks();
             },
             gSignOut: function(){
-                var auth2 = gapi.auth2.getAuthInstance();
-                auth2.signOut().then(function () {
-                    console.log('User signed out.');
-                });        
+                if(gapi.auth2.getAuthInstance()){
+                    var auth2 = gapi.auth2.getAuthInstance();
+                    auth2.signOut().then(function () {
+                        console.log('User signed out.');
+                    });
+                }
             }
         }
     }

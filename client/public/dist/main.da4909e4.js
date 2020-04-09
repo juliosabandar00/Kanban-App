@@ -8817,7 +8817,7 @@ function patchScopedSlots (instance) {
   }
 }
 
-},{}],"../src/App.vue":[function(require,module,exports) {
+},{}],"../src/components/Task.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8847,6 +8847,767 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+var url = 'http://localhost:5000';
+var _default = {
+  name: 'Task',
+  data: function data() {
+    return {
+      updateId: null,
+      updateTitle: null,
+      updateCategory: null
+    };
+  },
+  props: ['taskId', 'task', 'categories'],
+  methods: {
+    deleteTask: function deleteTask(id) {
+      var _this = this;
+
+      swal({
+        title: "Are you sure you want to delete this task?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true
+      }).then(function (willDelete) {
+        if (willDelete) {
+          axios({
+            url: url + '/task/' + id,
+            method: 'delete',
+            headers: {
+              access_token: localStorage.getItem('access_token')
+            }
+          }).then(function (response) {
+            console.log(response);
+            swal("Task has been deleted!", {
+              icon: "success"
+            });
+
+            _this.$emit('deleteTaskFromChild', response.data);
+          }).catch(function () {
+            swal({
+              title: "Error",
+              text: "You do not have access to delete this task!",
+              icon: "error"
+            });
+          });
+        }
+      });
+    },
+    updateTask: function updateTask(id, title, category) {
+      this.updateId = id;
+      this.updateTitle = title;
+      this.updateCategory = category;
+      console.log(this.updateId);
+      console.log(this.updateTitle);
+    },
+    saveUpdate: function saveUpdate(id) {
+      var _this2 = this;
+
+      axios({
+        url: url + '/task/' + id,
+        method: 'put',
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        },
+        data: {
+          title: this.updateTitle,
+          category: this.updateCategory
+        }
+      }).then(function (response) {
+        console.log(response);
+        _this2.updateId = null;
+        _this2.updateTitle = null;
+        _this2.updateCategory = null;
+
+        _this2.$emit('updateTaskFromChild', response.data);
+      }).catch(function (err) {
+        console.log(err.request.status);
+
+        if (err.request.status == 401) {
+          swal({
+            title: "Error",
+            text: "Title of Task Cannot Be Empty!",
+            icon: "error"
+          });
+        } else {
+          swal({
+            title: "Error",
+            text: "You do not have access to edit this task!",
+            icon: "error"
+          });
+        }
+
+        _this2.updateId = null;
+        _this2.updateTitle = null;
+        console.log(err);
+      });
+    }
+  }
+};
+exports.default = _default;
+        var $aa6d83 = exports.default || module.exports;
+      
+      if (typeof $aa6d83 === 'function') {
+        $aa6d83 = $aa6d83.options;
+      }
+    
+        /* template */
+        Object.assign($aa6d83, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _vm.updateId !== _vm.task.id
+      ? _c("div", [
+          _c("div", { staticClass: "content" }, [
+            _c("h4", [_vm._v(" " + _vm._s(_vm.task.title) + " ")]),
+            _vm._v(" "),
+            _c("p", [_vm._v(" " + _vm._s(_vm.task.User.email) + " ")])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "actions" }, [
+            _c("div", { staticClass: "user_container" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary btn-sm action_button",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.updateTask(
+                        _vm.task.id,
+                        _vm.task.title,
+                        _vm.task.category
+                      )
+                    }
+                  }
+                },
+                [_vm._v("Edit")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-danger btn-sm action_button",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.deleteTask(_vm.task.id)
+                    }
+                  }
+                },
+                [_vm._v("Delete")]
+              )
+            ])
+          ])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.updateId == _vm.task.id
+      ? _c("div", [
+          _c(
+            "form",
+            {
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.saveUpdate(_vm.task.id)
+                }
+              }
+            },
+            [
+              _c("div", { staticClass: "form-group" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.updateTitle,
+                      expression: "updateTitle"
+                    }
+                  ],
+                  staticClass: "form-control form-control-sm",
+                  attrs: { value: "updateTitle", type: "text" },
+                  domProps: { value: _vm.updateTitle },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.updateTitle = $event.target.value
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.updateCategory,
+                      expression: "updateCategory"
+                    }
+                  ],
+                  staticClass: "form-control form-control-sm",
+                  attrs: { value: "updateCategory" },
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.updateCategory = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    }
+                  }
+                },
+                [
+                  _vm._l(_vm.categories, function(category) {
+                    return category === _vm.task.category
+                      ? _c("option", { attrs: { selected: "" } }, [
+                          _vm._v(_vm._s(category.name))
+                        ])
+                      : _vm._e()
+                  }),
+                  _vm._v(" "),
+                  _vm._l(_vm.categories, function(category) {
+                    return category !== _vm.task.category
+                      ? _c("option", [_vm._v(_vm._s(category.name))])
+                      : _vm._e()
+                  })
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _c("br"),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary btn-sm",
+                  attrs: { type: "submit" }
+                },
+                [_vm._v("Save Changes")]
+              )
+            ]
+          )
+        ])
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$aa6d83', $aa6d83);
+          } else {
+            api.reload('$aa6d83', $aa6d83);
+          }
+        }
+
+        
+      }
+    })();
+},{"vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/components/TaskList.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _Task = _interopRequireDefault(require("./Task.vue"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var url = 'http://localhost:5000';
+var _default = {
+  name: 'TaskList',
+  components: {
+    Task: _Task.default
+  },
+  data: function data() {
+    return {
+      inputTitle0: null,
+      inputTitle1: null,
+      inputTitle2: null,
+      inputTitle3: null
+    };
+  },
+  props: ['catId', 'category', 'categories', 'tasks'],
+  methods: {
+    deleteTask: function deleteTask(payload) {
+      this.$emit('deleteTaskFromChild', payload);
+    },
+    updateTask: function updateTask(payload) {
+      this.$emit('updateTaskFromChild', payload);
+    },
+    createTask: function createTask(CatId) {
+      var _this = this;
+
+      var title, category;
+
+      switch (CatId) {
+        case 0:
+          title = this.inputTitle0;
+          category = this.categories[0].name;
+          break;
+
+        case 1:
+          title = this.inputTitle1;
+          category = this.categories[1].name;
+          break;
+
+        case 2:
+          title = this.inputTitle2;
+          category = this.categories[2].name;
+          break;
+
+        case 3:
+          title = this.inputTitle3;
+          category = this.categories[3].name;
+          break;
+
+        default:
+          break;
+      }
+
+      axios({
+        url: url + '/task',
+        method: 'post',
+        data: {
+          title: title,
+          category: category
+        },
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
+      }).then(function (response) {
+        console.log(response.data.task);
+
+        _this.$emit('createTaskFromChild', response.data);
+
+        switch (CatId) {
+          case 0:
+            _this.inputTitle0 = null;
+            break;
+
+          case 1:
+            _this.inputTitle1 = null;
+            break;
+
+          case 2:
+            _this.inputTitle2 = null;
+            break;
+
+          case 3:
+            _this.inputTitle3 = null;
+            break;
+
+          default:
+            break;
+        }
+      }).catch(function (err) {
+        swal({
+          title: "Error",
+          text: 'Task Title Cannot Be Empty',
+          icon: "error"
+        });
+      });
+    }
+  }
+};
+exports.default = _default;
+        var $1024f1 = exports.default || module.exports;
+      
+      if (typeof $1024f1 === 'function') {
+        $1024f1 = $1024f1.options;
+      }
+    
+        /* template */
+        Object.assign($1024f1, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "category_div" }, [
+      _c("h1", [_vm._v(_vm._s(_vm.category))])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "top_part" }, [
+      _c("div", { staticClass: "scroller" }, [
+        _c(
+          "div",
+          {
+            attrs: {
+              "data-spy": "scroll",
+              "data-target": "#navbar-example3",
+              "data-offset": "0"
+            }
+          },
+          [
+            _c(
+              "transition-group",
+              { attrs: { name: "fade" } },
+              _vm._l(_vm.tasks, function(task) {
+                return task.category === _vm.category
+                  ? _c("Task", {
+                      key: task.id,
+                      staticClass: "card",
+                      attrs: {
+                        taskId: task.id,
+                        task: task,
+                        categories: _vm.categories
+                      },
+                      on: {
+                        deleteTaskFromChild: _vm.deleteTask,
+                        updateTaskFromChild: _vm.updateTask
+                      }
+                    })
+                  : _vm._e()
+              }),
+              1
+            )
+          ],
+          1
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c("br"),
+    _vm._v(" "),
+    _c("div", { staticClass: "add_task_div" }, [
+      _c(
+        "form",
+        {
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.createTask(_vm.catId)
+            }
+          }
+        },
+        [
+          _vm.catId == 0
+            ? _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.inputTitle0,
+                    expression: "inputTitle0"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { rows: "2", placeholder: "enter new task here" },
+                domProps: { value: _vm.inputTitle0 },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.inputTitle0 = $event.target.value
+                  }
+                }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.catId == 1
+            ? _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.inputTitle1,
+                    expression: "inputTitle1"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { rows: "2", placeholder: "enter new task here" },
+                domProps: { value: _vm.inputTitle1 },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.inputTitle1 = $event.target.value
+                  }
+                }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.catId == 2
+            ? _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.inputTitle2,
+                    expression: "inputTitle2"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { rows: "2", placeholder: "enter new task here" },
+                domProps: { value: _vm.inputTitle2 },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.inputTitle2 = $event.target.value
+                  }
+                }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.catId == 3
+            ? _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.inputTitle3,
+                    expression: "inputTitle3"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { rows: "2", placeholder: "enter new task here" },
+                domProps: { value: _vm.inputTitle3 },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.inputTitle3 = $event.target.value
+                  }
+                }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary btn-lg btn-block",
+              attrs: { type: "submit" }
+            },
+            [_vm._v("Add Task")]
+          )
+        ]
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$1024f1', $1024f1);
+          } else {
+            api.reload('$1024f1', $1024f1);
+          }
+        }
+
+        
+      }
+    })();
+},{"./Task.vue":"../src/components/Task.vue","vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/components/GoogleButton.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+var url = 'http://localhost:5000';
+var _default = {
+  name: 'GoogleButton',
+  mounted: function mounted() {
+    this.renderGoogleButton();
+  },
+  methods: {
+    renderGoogleButton: function renderGoogleButton() {
+      gapi.signin2.render('google-signin-button', {
+        onsuccess: this.onSignIn
+      });
+    },
+    onSignIn: function onSignIn(googleUser) {
+      var _this = this;
+
+      console.log('test');
+      var id_token = googleUser.getAuthResponse().id_token;
+      axios({
+        method: 'POST',
+        url: 'http://localhost:5000/loginGoogle',
+        data: {
+          token: id_token
+        }
+      }).then(function (response) {
+        console.log(response);
+        localStorage.setItem('access_token', response.data.access_token);
+        swal("Success!", "You are logged in!", "success");
+
+        _this.$emit('loginWithGoogle', response.data);
+      }).catch(function (err) {
+        swal({
+          title: "Error",
+          text: err.message,
+          icon: "error"
+        });
+      });
+    }
+  }
+};
+exports.default = _default;
+        var $721768 = exports.default || module.exports;
+      
+      if (typeof $721768 === 'function') {
+        $721768 = $721768.options;
+      }
+    
+        /* template */
+        Object.assign($721768, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { attrs: { id: "google-signin-button" } }, [
+    _vm._v("Refresh To Login With Google")
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$721768', $721768);
+          } else {
+            api.reload('$721768', $721768);
+          }
+        }
+
+        
+      }
+    })();
+},{"vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/App.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _TaskList = _interopRequireDefault(require("./components/TaskList.vue"));
+
+var _GoogleButton = _interopRequireDefault(require("./components/GoogleButton.vue"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 //
 //
 //
@@ -8938,6 +9699,10 @@ exports.default = void 0;
 var url = 'http://localhost:5000';
 var _default = {
   name: 'App',
+  components: {
+    TaskList: _TaskList.default,
+    GoogleButton: _GoogleButton.default
+  },
   data: function data() {
     return {
       loggedIn: false,
@@ -8950,9 +9715,22 @@ var _default = {
       passwordLog: null,
       emailReg: null,
       passwordReg: null,
+      userEmail: null,
       //kanban data  
-      tasks: null,
-      categories: ['Backlog', 'Todo', 'In Progress', 'Completed'],
+      tasks: [],
+      categories: [{
+        id: 0,
+        name: 'Backlog'
+      }, {
+        id: 1,
+        name: 'Todo'
+      }, {
+        id: 2,
+        name: 'In Progress'
+      }, {
+        id: 3,
+        name: 'Completed'
+      }],
       inputTitle0: null,
       inputTitle1: null,
       inputTitle2: null,
@@ -8961,9 +9739,6 @@ var _default = {
       updateTitle: null,
       updateCategory: null
     };
-  },
-  mounted: function mounted() {
-    this.renderGoogleButton();
   },
   created: function created() {
     this.checkLogin();
@@ -8989,11 +9764,6 @@ var _default = {
       this.logIn = true;
       this.signUp = false;
     },
-    renderGoogleButton: function renderGoogleButton() {
-      gapi.signin2.render('google-signin-button', {
-        'data-onsuccess': this.onSignIn
-      });
-    },
     login: function login() {
       var _this = this;
 
@@ -9013,6 +9783,7 @@ var _default = {
         _this.loggedIn = true;
       }).then(function () {
         console.log(localStorage.getItem('access_token'));
+        _this.userEmail = _this.emailLog;
         _this.emailLog = null;
         _this.passwordLog = null;
 
@@ -9026,38 +9797,18 @@ var _default = {
         });
       });
     },
-    onSignIn: function onSignIn(googleUser) {
-      var _this2 = this;
-
-      console.log('test');
-      var id_token = googleUser.getAuthResponse().id_token;
-      axios({
-        method: 'POST',
-        url: 'http://localhost:5000/loginGoogle',
-        data: {
-          token: id_token
-        }
-      }).then(function (response) {
-        console.log(response);
-        localStorage.setItem('access_token', response.data.access_token);
-        console.log(_this2.loggedIn);
-        _this2.loggedIn = true;
-
-        _this2.checkLogin();
-      }).catch(function (err) {
-        swal({
-          title: "Error",
-          text: 'Invalid Username/Password',
-          icon: "error"
-        });
-      });
+    onSignIn: function onSignIn(payload) {
+      console.log(payload);
+      this.loggedIn = true;
+      this.checkLogin();
+      this.$emit('updateTaskFromChild', response.data);
     },
     showRegisterForm: function showRegisterForm() {
       this.logIn = false;
       this.signUp = true;
     },
     register: function register() {
-      var _this3 = this;
+      var _this2 = this;
 
       axios({
         url: url + '/register',
@@ -9069,10 +9820,10 @@ var _default = {
       }).then(function (response) {
         swal("Success!", "You can now Log In!", "success");
         console.log(response);
-        _this3.emailReg = null;
-        _this3.passwordReg = null;
+        _this2.emailReg = null;
+        _this2.passwordReg = null;
 
-        _this3.checkLogin();
+        _this2.checkLogin();
       }).catch(function (err) {
         console.log(err);
         swal({
@@ -9083,7 +9834,7 @@ var _default = {
       });
     },
     signOut: function signOut() {
-      var _this4 = this;
+      var _this3 = this;
 
       swal({
         title: "Are you sure you want to sign out?",
@@ -9092,15 +9843,18 @@ var _default = {
         dangerMode: true
       }).then(function (signout) {
         if (signout) {
-          localStorage.clear();
-          _this4.loggedIn = false;
+          _this3.gSignOut();
 
-          _this4.checkLogin();
+          _this3.userEmail = null;
+          localStorage.clear();
+          _this3.loggedIn = false;
+
+          _this3.checkLogin();
         }
-      }); // this.gSignOut()
+      });
     },
     loadTasks: function loadTasks() {
-      var _this5 = this;
+      var _this4 = this;
 
       console.log(localStorage.getItem('access_token'));
       axios({
@@ -9110,7 +9864,7 @@ var _default = {
           access_token: localStorage.getItem('access_token')
         }
       }).then(function (response) {
-        _this5.tasks = response.data.tasks;
+        _this4.tasks = response.data.tasks;
       }).catch(function (err) {
         swal({
           title: "Error",
@@ -9119,167 +9873,25 @@ var _default = {
         });
       });
     },
-    createTask: function createTask(CatId) {
-      var _this6 = this;
-
-      var title, category;
-
-      switch (CatId) {
-        case 0:
-          title = this.inputTitle0;
-          category = this.categories[0];
-          break;
-
-        case 1:
-          title = this.inputTitle1;
-          category = this.categories[1];
-          break;
-
-        case 2:
-          title = this.inputTitle2;
-          category = this.categories[2];
-          break;
-
-        case 3:
-          title = this.inputTitle3;
-          category = this.categories[3];
-          break;
-
-        default:
-          break;
-      }
-
-      axios({
-        url: url + '/task',
-        method: 'post',
-        data: {
-          title: title,
-          category: category
-        },
-        headers: {
-          access_token: localStorage.getItem('access_token')
-        }
-      }).then(function (response) {
-        console.log(response.data.task);
-
-        _this6.loadTasks();
-
-        switch (CatId) {
-          case 0:
-            _this6.inputTitle0 = null;
-            break;
-
-          case 1:
-            _this6.inputTitle1 = null;
-            break;
-
-          case 2:
-            _this6.inputTitle2 = null;
-            break;
-
-          case 3:
-            _this6.inputTitle3 = null;
-            break;
-
-          default:
-            break;
-        }
-      }).catch(function (err) {
-        swal({
-          title: "Error",
-          text: 'Task Title Cannot Be Empty',
-          icon: "error"
-        });
-      });
-    },
-    deleteTask: function deleteTask(id) {
-      var _this7 = this;
-
-      swal({
-        title: "Are you sure you want to delete this task?",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true
-      }).then(function (willDelete) {
-        if (willDelete) {
-          axios({
-            url: url + '/task/' + id,
-            method: 'delete',
-            headers: {
-              access_token: localStorage.getItem('access_token')
-            }
-          }).then(function (response) {
-            console.log(response);
-            swal("Task has been deleted!", {
-              icon: "success"
-            });
-
-            _this7.loadTasks();
-          }).catch(function () {
-            swal({
-              title: "Error",
-              text: "You do not have access to delete this task!",
-              icon: "error"
-            });
-          });
-        }
-      });
-    },
-    updateTask: function updateTask(id, title, category) {
-      this.updateId = id;
-      this.updateTitle = title;
-      this.updateCategory = category;
+    createTask: function createTask(payload) {
+      console.log(payload);
       this.loadTasks();
-      console.log(this.updateId);
-      console.log(this.updateTitle);
     },
-    saveUpdate: function saveUpdate(id) {
-      var _this8 = this;
-
-      axios({
-        url: url + '/task/' + id,
-        method: 'put',
-        headers: {
-          access_token: localStorage.getItem('access_token')
-        },
-        data: {
-          title: this.updateTitle,
-          category: this.updateCategory
-        }
-      }).then(function (response) {
-        console.log(response);
-        _this8.updateId = null;
-        _this8.updateTitle = null;
-        _this8.updateCategory = null;
-
-        _this8.loadTasks();
-      }).catch(function (err) {
-        console.log(err.request.status);
-
-        if (err.request.status == 401) {
-          swal({
-            title: "Error",
-            text: "Title of Task Cannot Be Empty!",
-            icon: "error"
-          });
-        } else {
-          swal({
-            title: "Error",
-            text: "You do not have access to edit this task!",
-            icon: "error"
-          });
-        }
-
-        _this8.updateId = null;
-        _this8.updateTitle = null;
-        console.log(err);
-      });
+    updateTask: function updateTask(payload) {
+      console.log(payload);
+      this.loadTasks();
+    },
+    deleteTask: function deleteTask(payload) {
+      console.log(payload);
+      this.loadTasks();
     },
     gSignOut: function gSignOut() {
-      var auth2 = gapi.auth2.getAuthInstance();
-      auth2.signOut().then(function () {
-        console.log('User signed out.');
-      });
+      if (gapi.auth2.getAuthInstance()) {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+          console.log('User signed out.');
+        });
+      }
     }
   }
 };
@@ -9299,6 +9911,8 @@ exports.default = _default;
   return _c("div", [
     _vm.logIn
       ? _c("div", { staticClass: "page" }, [
+          _vm._m(0),
+          _vm._v(" "),
           _c(
             "div",
             { staticClass: "login_container" },
@@ -9409,15 +10023,19 @@ exports.default = _default;
                 [_vm._v("Create A New Account")]
               ),
               _vm._v(" "),
-              _c("center", [
-                _c("br"),
-                _vm._v(" "),
-                _c("h6", [_vm._v("------- Or -------")]),
-                _vm._v(" "),
-                _c("h6", [_vm._v("Log In With Google")]),
-                _vm._v(" "),
-                _c("div", { attrs: { id: "google-signin-button" } })
-              ])
+              _c(
+                "center",
+                [
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("h6", [_vm._v("------- Or -------")]),
+                  _vm._v(" "),
+                  _c("h6", [_vm._v("Log In With Google")]),
+                  _vm._v(" "),
+                  _c("GoogleButton", { on: { loginWithGoogle: _vm.onSignIn } })
+                ],
+                1
+              )
             ],
             1
           )
@@ -9426,6 +10044,8 @@ exports.default = _default;
     _vm._v(" "),
     _vm.signUp
       ? _c("div", { staticClass: "page" }, [
+          _vm._m(1),
+          _vm._v(" "),
           _c("div", { staticClass: "register_container" }, [
             _c(
               "a",
@@ -9539,461 +10159,84 @@ exports.default = _default;
     _vm._v(" "),
     _vm.kanban
       ? _c("div", { staticClass: "page" }, [
-          _c("div", { staticClass: "header" }, [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-danger",
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    $event.stopPropagation()
-                    return _vm.signOut($event)
+          _c("nav", { staticClass: "navbar navbar-dark bg-primary" }, [
+            _vm._m(2),
+            _vm._v(" "),
+            _c("div", { staticClass: "signout" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-danger",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      $event.stopPropagation()
+                      return _vm.signOut($event)
+                    }
                   }
-                }
-              },
-              [_vm._v("Sign Out")]
-            )
+                },
+                [_vm._v("Sign Out")]
+              )
+            ])
           ]),
           _vm._v(" "),
           _c(
             "div",
             { staticClass: "main_container" },
-            _vm._l(_vm.categories, function(category, index) {
-              return _c(
-                "div",
-                {
-                  staticClass: "card_container",
-                  attrs: { id: "backlog_container" }
+            _vm._l(_vm.categories, function(category) {
+              return _c("TaskList", {
+                key: category.id,
+                staticClass: "card_container",
+                attrs: {
+                  catId: category.id,
+                  category: category.name,
+                  categories: _vm.categories,
+                  tasks: _vm.tasks,
+                  id: "backlog_container"
                 },
-                [
-                  _c("div", { staticClass: "category_div" }, [
-                    _c("h1", [_vm._v(_vm._s(category))])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "top_part" }, [
-                    _c("div", { staticClass: "scroller" }, [
-                      _c(
-                        "div",
-                        {
-                          attrs: {
-                            "data-spy": "scroll",
-                            "data-target": "#navbar-example3",
-                            "data-offset": "0"
-                          }
-                        },
-                        [
-                          _c(
-                            "transition-group",
-                            { attrs: { name: "fade" } },
-                            _vm._l(_vm.tasks, function(task) {
-                              return task.category === category
-                                ? _c(
-                                    "div",
-                                    { key: task.id, staticClass: "card" },
-                                    [
-                                      _vm.updateId !== task.id
-                                        ? _c("div", [
-                                            _c(
-                                              "div",
-                                              { staticClass: "content" },
-                                              [
-                                                _c("h4", [
-                                                  _vm._v(
-                                                    " " +
-                                                      _vm._s(task.title) +
-                                                      " "
-                                                  )
-                                                ]),
-                                                _vm._v(" "),
-                                                _c("p", [
-                                                  _vm._v(
-                                                    " " +
-                                                      _vm._s(task.User.email) +
-                                                      " "
-                                                  )
-                                                ])
-                                              ]
-                                            ),
-                                            _vm._v(" "),
-                                            _c(
-                                              "div",
-                                              { staticClass: "actions" },
-                                              [
-                                                _c(
-                                                  "div",
-                                                  {
-                                                    staticClass:
-                                                      "user_container"
-                                                  },
-                                                  [
-                                                    _c(
-                                                      "button",
-                                                      {
-                                                        staticClass:
-                                                          "btn btn-primary btn-sm action_button",
-                                                        attrs: {
-                                                          type: "button"
-                                                        },
-                                                        on: {
-                                                          click: function(
-                                                            $event
-                                                          ) {
-                                                            $event.preventDefault()
-                                                            return _vm.updateTask(
-                                                              task.id,
-                                                              task.title,
-                                                              task.category
-                                                            )
-                                                          }
-                                                        }
-                                                      },
-                                                      [_vm._v("Edit")]
-                                                    ),
-                                                    _vm._v(" "),
-                                                    _c(
-                                                      "button",
-                                                      {
-                                                        staticClass:
-                                                          "btn btn-danger btn-sm action_button",
-                                                        attrs: {
-                                                          type: "button"
-                                                        },
-                                                        on: {
-                                                          click: function(
-                                                            $event
-                                                          ) {
-                                                            $event.preventDefault()
-                                                            return _vm.deleteTask(
-                                                              task.id
-                                                            )
-                                                          }
-                                                        }
-                                                      },
-                                                      [_vm._v("Delete")]
-                                                    )
-                                                  ]
-                                                )
-                                              ]
-                                            )
-                                          ])
-                                        : _vm._e(),
-                                      _vm._v(" "),
-                                      _vm.updateId == task.id
-                                        ? _c("div", [
-                                            _c(
-                                              "form",
-                                              {
-                                                on: {
-                                                  submit: function($event) {
-                                                    $event.preventDefault()
-                                                    return _vm.saveUpdate(
-                                                      task.id
-                                                    )
-                                                  }
-                                                }
-                                              },
-                                              [
-                                                _c(
-                                                  "div",
-                                                  { staticClass: "form-group" },
-                                                  [
-                                                    _c("input", {
-                                                      directives: [
-                                                        {
-                                                          name: "model",
-                                                          rawName: "v-model",
-                                                          value:
-                                                            _vm.updateTitle,
-                                                          expression:
-                                                            "updateTitle"
-                                                        }
-                                                      ],
-                                                      staticClass:
-                                                        "form-control form-control-sm",
-                                                      attrs: {
-                                                        value: "updateTitle",
-                                                        type: "text"
-                                                      },
-                                                      domProps: {
-                                                        value: _vm.updateTitle
-                                                      },
-                                                      on: {
-                                                        input: function(
-                                                          $event
-                                                        ) {
-                                                          if (
-                                                            $event.target
-                                                              .composing
-                                                          ) {
-                                                            return
-                                                          }
-                                                          _vm.updateTitle =
-                                                            $event.target.value
-                                                        }
-                                                      }
-                                                    })
-                                                  ]
-                                                ),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "select",
-                                                  {
-                                                    directives: [
-                                                      {
-                                                        name: "model",
-                                                        rawName: "v-model",
-                                                        value:
-                                                          _vm.updateCategory,
-                                                        expression:
-                                                          "updateCategory"
-                                                      }
-                                                    ],
-                                                    staticClass:
-                                                      "form-control form-control-sm",
-                                                    attrs: {
-                                                      value: "updateCategory"
-                                                    },
-                                                    on: {
-                                                      change: function($event) {
-                                                        var $$selectedVal = Array.prototype.filter
-                                                          .call(
-                                                            $event.target
-                                                              .options,
-                                                            function(o) {
-                                                              return o.selected
-                                                            }
-                                                          )
-                                                          .map(function(o) {
-                                                            var val =
-                                                              "_value" in o
-                                                                ? o._value
-                                                                : o.value
-                                                            return val
-                                                          })
-                                                        _vm.updateCategory = $event
-                                                          .target.multiple
-                                                          ? $$selectedVal
-                                                          : $$selectedVal[0]
-                                                      }
-                                                    }
-                                                  },
-                                                  [
-                                                    _vm._l(
-                                                      _vm.categories,
-                                                      function(category2) {
-                                                        return category2 ===
-                                                          category
-                                                          ? _c(
-                                                              "option",
-                                                              {
-                                                                attrs: {
-                                                                  selected: ""
-                                                                }
-                                                              },
-                                                              [
-                                                                _vm._v(
-                                                                  _vm._s(
-                                                                    category2
-                                                                  )
-                                                                )
-                                                              ]
-                                                            )
-                                                          : _vm._e()
-                                                      }
-                                                    ),
-                                                    _vm._v(" "),
-                                                    _vm._l(
-                                                      _vm.categories,
-                                                      function(category2) {
-                                                        return category2 !==
-                                                          category
-                                                          ? _c("option", [
-                                                              _vm._v(
-                                                                _vm._s(
-                                                                  category2
-                                                                )
-                                                              )
-                                                            ])
-                                                          : _vm._e()
-                                                      }
-                                                    )
-                                                  ],
-                                                  2
-                                                ),
-                                                _vm._v(" "),
-                                                _c("br"),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "button",
-                                                  {
-                                                    staticClass:
-                                                      "btn btn-primary btn-sm",
-                                                    attrs: { type: "submit" }
-                                                  },
-                                                  [_vm._v("Save Changes")]
-                                                )
-                                              ]
-                                            )
-                                          ])
-                                        : _vm._e()
-                                    ]
-                                  )
-                                : _vm._e()
-                            }),
-                            0
-                          )
-                        ],
-                        1
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("br"),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "add_task_div" }, [
-                    _c(
-                      "form",
-                      {
-                        on: {
-                          submit: function($event) {
-                            $event.preventDefault()
-                            return _vm.createTask(index)
-                          }
-                        }
-                      },
-                      [
-                        index == 0
-                          ? _c("textarea", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.inputTitle0,
-                                  expression: "inputTitle0"
-                                }
-                              ],
-                              staticClass: "form-control",
-                              attrs: {
-                                rows: "2",
-                                placeholder: "enter new task here"
-                              },
-                              domProps: { value: _vm.inputTitle0 },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.inputTitle0 = $event.target.value
-                                }
-                              }
-                            })
-                          : _vm._e(),
-                        _vm._v(" "),
-                        index == 1
-                          ? _c("textarea", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.inputTitle1,
-                                  expression: "inputTitle1"
-                                }
-                              ],
-                              staticClass: "form-control",
-                              attrs: {
-                                rows: "2",
-                                placeholder: "enter new task here"
-                              },
-                              domProps: { value: _vm.inputTitle1 },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.inputTitle1 = $event.target.value
-                                }
-                              }
-                            })
-                          : _vm._e(),
-                        _vm._v(" "),
-                        index == 2
-                          ? _c("textarea", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.inputTitle2,
-                                  expression: "inputTitle2"
-                                }
-                              ],
-                              staticClass: "form-control",
-                              attrs: {
-                                rows: "2",
-                                placeholder: "enter new task here"
-                              },
-                              domProps: { value: _vm.inputTitle2 },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.inputTitle2 = $event.target.value
-                                }
-                              }
-                            })
-                          : _vm._e(),
-                        _vm._v(" "),
-                        index == 3
-                          ? _c("textarea", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.inputTitle3,
-                                  expression: "inputTitle3"
-                                }
-                              ],
-                              staticClass: "form-control",
-                              attrs: {
-                                rows: "2",
-                                placeholder: "enter new task here"
-                              },
-                              domProps: { value: _vm.inputTitle3 },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.inputTitle3 = $event.target.value
-                                }
-                              }
-                            })
-                          : _vm._e(),
-                        _vm._v(" "),
-                        _c("br"),
-                        _vm._v(" "),
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-primary btn-lg btn-block",
-                            attrs: { type: "submit" }
-                          },
-                          [_vm._v("Add Task")]
-                        )
-                      ]
-                    )
-                  ])
-                ]
-              )
+                on: {
+                  createTaskFromChild: _vm.createTask,
+                  deleteTaskFromChild: _vm.deleteTask,
+                  updateTaskFromChild: _vm.updateTask
+                }
+              })
             }),
-            0
+            1
           )
         ])
       : _vm._e()
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("nav", { staticClass: "navbar navbar-dark bg-primary" }, [
+      _c("div", { staticClass: "title" }, [
+        _c("h2", { staticClass: "app_name" }, [_vm._v(" KANBAN ")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("nav", { staticClass: "navbar navbar-dark bg-primary" }, [
+      _c("div", { staticClass: "title" }, [
+        _c("h2", { staticClass: "app_name" }, [_vm._v(" KANBAN ")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "title" }, [
+      _c("h2", { staticClass: "app_name" }, [_vm._v(" KANBAN ")])
+    ])
+  }
+]
 render._withStripped = true
 
           return {
@@ -10022,7 +10265,7 @@ render._withStripped = true
         
       }
     })();
-},{"vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/main.js":[function(require,module,exports) {
+},{"./components/TaskList.vue":"../src/components/TaskList.vue","./components/GoogleButton.vue":"../src/components/GoogleButton.vue","vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/main.js":[function(require,module,exports) {
 "use strict";
 
 var _vue = _interopRequireDefault(require("vue"));
@@ -10064,7 +10307,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62189" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53610" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
