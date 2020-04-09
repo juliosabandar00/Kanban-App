@@ -5,15 +5,21 @@ module.exports = (sequelize, DataTypes) => {
 	class Task extends Model {}
 	Task.init({
 		title: {
-		type: DataTypes.STRING,
-		validate : {
-				notEmpty: true
+			type: DataTypes.STRING,
+			allowNull: false,
+			validate : {
+				notEmpty: {
+					msg: 'Title cannot be empty'
+				}
 			}
 		},
 		category: {
-		type: DataTypes.STRING,
-		validate : {
-				notEmpty: true
+			type: DataTypes.STRING,
+			allowNull: false,
+			validate : {
+				notEmpty: {
+					msg: 'Category cannot be empty'
+				}
 			}
 		},
 		UserId: {

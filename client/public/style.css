@@ -1,0 +1,117 @@
+.body{
+    background-color: rgba(36, 45, 172, 0.603);
+}
+
+h1, h2, h6 {
+    color: white;
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+}
+  
+.action_button{
+    margin-left: 10px;
+    width: 60px
+}
+
+a {
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 16px;
+  }
+  
+  a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+  
+  .previous {
+    background-color: #f1f1f1;
+    color: black;
+  }
+  
+  .next {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .round {
+    border-radius: 50%;
+  }
+  
+
+label{
+    color: white;
+}
+
+.icon{
+    height:15px;
+}
+
+.avatar{
+    height:25px;
+    border-radius: 25px;
+}
+
+.login_container, .register_container{
+    background-color: rgba(0, 113, 113, 0.603);
+    width: 35%;
+    padding: 50px;
+    margin: 0 auto;
+    border-radius: 25px;
+    transform: translateY(25%);
+}
+
+.card{
+    border-radius: 25px;
+    background-color: white(161, 39, 39);
+    margin: 10px;
+    padding: 10px;
+}
+
+.page{
+    background-color: rgba(250, 113, 113, 0.603);
+    height: 100vh;
+    width: 100vw;
+}
+.main_container{
+    width: 97.5%;
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+}
+.card_container{
+    background-color: rgba(0, 113, 113, 0.603);
+    padding: 20px;
+    width: 25%;
+    margin: 10px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* align-content: space-between; */
+}
+.header{
+    padding: 0.5%;
+}
+
+.top_part{
+    position: relative;
+    height: 80%;
+    overflow-y: scroll;
+}
+
+.user_container{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.add_task_div{
+    margin: 0 auto;
+    width: 95%;
+}

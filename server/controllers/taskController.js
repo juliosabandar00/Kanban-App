@@ -4,7 +4,7 @@ class taskController {
         Task.findAll({include: {
             model: User, 
             where: {organization : 'Hacktiv8'}
-        }})
+        }, order: [['id', 'DESC']]})
         .then((tasks)=>{
             res.status(200).json({tasks})
         })

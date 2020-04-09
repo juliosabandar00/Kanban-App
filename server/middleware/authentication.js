@@ -3,6 +3,7 @@ function authentication(req, res, next){
     const access_token = req.headers.access_token;
     try{
         if(!access_token){
+            consolge.log('ayyyyy')
             res.status(404).json({message: 'token not not found'})
         }else{
             const decoded = jwt.verify(access_token, process.env.JWT_SECRETKEY);
