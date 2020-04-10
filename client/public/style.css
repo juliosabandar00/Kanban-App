@@ -1,5 +1,7 @@
 .body{
-    background-color: rgba(36, 45, 172, 0.603);
+    background-color: white;
+    min-width: 1000px;
+    min-height: 500px;
 }
 
 h1, h2, h6 {
@@ -24,24 +26,24 @@ a {
     padding: 8px 16px;
   }
   
-  a:hover {
+a:hover {
     background-color: #ddd;
     color: black;
-  }
+}
   
-  .previous {
+.previous {
     background-color: #f1f1f1;
     color: black;
-  }
-  
-  .next {
+}
+
+.next {
     background-color: #4CAF50;
     color: white;
-  }
-  
-  .round {
+}
+
+.round {
     border-radius: 50%;
-  }
+}
   
 
 label{
@@ -63,7 +65,8 @@ label{
     padding: 50px;
     margin: 0 auto;
     border-radius: 25px;
-    transform: translateY(25%);
+    transform: translateY(20%);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .card{
@@ -71,10 +74,18 @@ label{
     background-color: white(161, 39, 39);
     margin: 10px;
     padding: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    transition: transform .2s;
 }
 
+.card:hover{
+    transform: scale(1.025);
+}
+
+
 .page{
-    background-color: rgba(250, 113, 113, 0.603);
+    background-image: url('background.jpg');
+    background-color: white;
     height: 100vh;
     width: 100vw;
 }
@@ -94,8 +105,11 @@ label{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    transition: transform .2s;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     /* align-content: space-between; */
 }
+
 .header{
     padding: 0.5%;
 }
@@ -120,7 +134,8 @@ label{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr;
-    grid-template-areas: "title  signout" 
+    grid-template-areas: "title  signout";
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 

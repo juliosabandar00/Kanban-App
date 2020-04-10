@@ -37,7 +37,7 @@
 
 <script>
     import Task from './Task.vue';
-    const url = 'http://localhost:5000';
+    const url = 'https://kanbansakti.herokuapp.com';
     export default {
         name: 'TaskList',
         components: {

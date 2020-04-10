@@ -6,9 +6,7 @@
                     <h2 class="app_name"> KANBAN </h2>
                 </div>
             </nav>
-
             <div class ="login_container">
-
                 <h2>Log In to Your Account</h2>
                 <form v-on:submit.prevent="login">
                     <div class="form-group">
@@ -22,13 +20,13 @@
                     <button type="submit" class="btn btn-primary btn-lg btn-block">Log In</button>
                 </form>      
                 <br>
-                <button v-on:click.stop="showRegisterForm" type="button" class="btn btn-success btn-lg btn-block">Create A New Account</button>
+                <button v-on:click.stop="showRegisterForm" type="button" class="btn btn-danger btn-lg btn-block">Create A New Account</button>
                 <center>
                     <br>
                     <h6>------- Or -------</h6>
-                    <h6>Log In With Google</h6>
-                    <GoogleButton @loginWithGoogle="onSignIn">
-                    </GoogleButton>
+                    <br>
+                    <button v-on:click="loginWithGoogle" type="button" class="btn btn-primary btn-lg btn-block">Login With Google</button>
+
                 </center>
             </div>
         </div>
@@ -59,15 +57,10 @@
         </div>
         <!-- Kanban -->
         <div class ="page" v-if="kanban">
-            <nav class="navbar navbar-dark bg-primary">
-
-                <div class="title" >
-                    <h2 class="app_name"> KANBAN </h2>
-                </div>
-                <div class="signout">
-                    <button type="button" v-on:click.stop="signOut" class="btn btn-danger">Sign Out</button>
-                </div>
-            </nav>
+            <Navbar
+            :loggedWithGoogle="loggedWithGoogle"
+            @signOutFromChild="signOut">
+            </Navbar>
             <div class="main_container"  >
                 <!-- catagories -->
                 <TaskList v-for="category in categories" 
@@ -88,17 +81,18 @@
 
 <script>
     import TaskList from './components/TaskList.vue';
-    import GoogleButton from './components/GoogleButton.vue';
-    const url = 'http://localhost:5000';
+    import Navbar from './components/Navbar.vue';
+    const url = 'https://kanbansakti.herokuapp.com';
     export default {
         name:'App',
         components: {
             TaskList,
-            GoogleButton
+            Navbar
         },
         data(){
             return{
                 loggedIn: false,
+                loggedWithGoogle: false,
                 //pages
                 logIn: null, signUp: null, kanban: null,
                 //account data
@@ -179,11 +173,45 @@
                     });         
                 });
             },
+            loginWithGoogle: function (){
+                this.$gAuth.signIn()
+                .then(GoogleUser => {
+                    let id_token = GoogleUser.getAuthResponse().id_token;
+                    axios({
+                        url: url + '/loginGoogle',
+                        method: 'post',
+                        data: {
+                            token: id_token
+                        }
+                    })
+                    .then((response)=>{
+                        console.log(response);
+                        localStorage.setItem('access_token', response.data.access_token);
+                        swal("Success!", "You are logged in!", "success");
+                        this.checkLogin();
+                    })
+                    .catch(err=>{
+                        swal({
+                            title: "Error",
+                            text: err.message, 
+                            icon: "error"
+                        });
+                    });
+                })
+                .catch(error  => {
+                //on fail do something
+                    swal({
+                        title: "Error",
+                        text: err.message, 
+                        icon: "error"
+                    });
+                })
+            },
             onSignIn: function(payload){
                 console.log(payload)
                 this.loggedIn = true;
+                this.loggedWithGoogle = true;
                 this.checkLogin();
-                this.$emit('updateTaskFromChild', response.data);
             },
             showRegisterForm: function(){
                 this.logIn = false;
@@ -213,22 +241,13 @@
                     });
                 })
             },
-            signOut: function(){
-                swal({
-                    title: "Are you sure you want to sign out?",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true
-                })
-                .then(signout=>{
-                    if(signout){
-                        this.gSignOut()
-                        this.userEmail = null;
-                        localStorage.clear();
-                        this.loggedIn = false;
-                        this.checkLogin();  
-                    }
-                });
+            signOut: function(payload){
+                console.log(payload);
+                this.loggedWithGoogle = null;
+                this.userEmail = null;
+                this.loggedIn = false;
+                localStorage.clear();
+                this.checkLogin();
             },
             loadTasks: function(){
                 console.log(localStorage.getItem('access_token'));
@@ -261,14 +280,6 @@
             deleteTask: function(payload){
                 console.log(payload);
                 this.loadTasks();
-            },
-            gSignOut: function(){
-                if(gapi.auth2.getAuthInstance()){
-                    var auth2 = gapi.auth2.getAuthInstance();
-                    auth2.signOut().then(function () {
-                        console.log('User signed out.');
-                    });
-                }
             }
         }
     }

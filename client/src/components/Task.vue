@@ -20,7 +20,7 @@
                 <select value="updateCategory" v-model="updateCategory" class="form-control form-control-sm">
                     <option v-for="category in categories" v-if="category === task.category" selected>{{category.name}}</option>
                     <option v-for="category in categories" v-if="category !== task.category" >{{category.name}}</option>
-                </select>  
+                </select>
                 <br>
                 <button type="submit" class="btn btn-primary btn-sm">Save Changes</button>
             </form>
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-    const url = 'http://localhost:5000';
+    const url = 'https://kanbansakti.herokuapp.com';
     export default {
         name: 'Task',
         data(){
