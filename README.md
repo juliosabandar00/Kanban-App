@@ -495,6 +495,14 @@ _Request Body_
 }
 ```
 
+_Response (200)_
+```
+{
+  "accessToken": "<access_token>"
+}
+```
+
+
 _Response (500 - Internal Server Error)_
 ```
 {
