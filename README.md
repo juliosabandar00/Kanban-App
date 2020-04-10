@@ -1,12 +1,16 @@
 # kanban
 
-Kanban is web-app to manage your tasks by category. 
+Kanban is web-app to manage your tasks by category.
 
 Catagories include :
 * Backlog
 * Todo
 * In Progress
 * Completed
+
+Links:
+* Client : https://kanban2-1586465632577.web.app
+* Server : https://kanbansakti.herokuapp.com
 
 This app has :
 * RESTful endpoint for asset's CRUD operation
@@ -20,6 +24,8 @@ This app has :
 * Uer Authorization
 * Google Login
 * Error Handling
+
+
 
 &nbsp;
 
