@@ -26,7 +26,6 @@ This app has :
 ## RESTful endpoints
 ---
 
----
 ### GET /task
 > Get task item by id
 
